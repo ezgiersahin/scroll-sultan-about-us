@@ -1,26 +1,28 @@
 'use client';
-import { useEffect } from 'react';
-import styles from './page.module.css'
+import dynamic from 'next/dynamic';
+import styles from './page.module.css';
 import Intro from '../components/Intro';
 import Description from '../components/Description';
 import Projects from '../components/Projects';
 
+const LocomotiveWrapper = dynamic(
+  async () => {
+    const LocomotiveScroll = (await import('locomotive-scroll')).default;
+    return () => {
+      new LocomotiveScroll();
+      return null;
+    };
+  },
+  { ssr: false }
+);
+
 export default function Home() {
-
-  useEffect( () => {
-    (
-      async () => {
-          const LocomotiveScroll = (await import('locomotive-scroll')).default
-          const locomotiveScroll = new LocomotiveScroll();
-      }
-    )()
-  }, [])
-
   return (
-      <main className={styles.main}>
-        <Intro />
-        <Description />
-        <Projects />
-      </main>
-  )
+    <main className={styles.main}>
+      <LocomotiveWrapper />
+      <Intro />
+      <Description />
+      <Projects />
+    </main>
+  );
 }
